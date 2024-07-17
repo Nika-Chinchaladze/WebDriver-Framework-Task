@@ -99,9 +99,12 @@ describe("Test Google Cloud Page", () => {
         const newTab = await browser.getWindowHandles();
         await browser.switchToWindow(newTab[newTab.length - 1]);
 
+        // ENV variables
+        const varNumInstances = browser.testData.numInstances;
+
         // Number of Instances - 4
         const numberOfInstance = await page("outcome").numberOfInstance.getText();
-        expect(numberOfInstance).toBe("4");
+        expect(numberOfInstance).toBe(varNumInstances);
 
         // Operating System / Software: Free: Debian, CentOS, CoreOS, Ubuntu, or another User-Provided OS
         const operatingSystem = await page("outcome").operatingSystem.getText();

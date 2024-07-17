@@ -1,3 +1,18 @@
+const fs = require('fs');
+const path = require('path');
+
+function loadTestData(env) {
+    const testDataPath = path.resolve(__dirname, `../data/testData.${env}.json`);
+    if (fs.existsSync(testDataPath)) {
+        return JSON.parse(fs.readFileSync(testDataPath, 'utf-8'));
+    } else {
+        throw new Error(`Test data file for environment "${env}" not found.`);
+    }
+}
+
+const env = process.env.TEST_ENV || 'dev';
+const testData = loadTestData(env);
+
 exports.config = {
     //
     // ====================
@@ -84,8 +99,13 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    // baseUrl: 'http://localhost:8080',
-    //
+    baseUrl: 'http://localhost:8080',
+
+    // Add custom variables to browser object
+    before: function (capabilities, specs) {
+        browser.testData = testData;
+    },
+
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
     //
